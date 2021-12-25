@@ -32,5 +32,15 @@ namespace ProjektWPF
         {
 
         }
+
+        private void deleteButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void addImageButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
