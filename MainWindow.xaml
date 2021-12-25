@@ -39,7 +39,8 @@
             <TextBlock Text="Name: " />
             <TextBlock Text="Description: " />
             <TextBlock Text="Grade: " />
-            <TextBlock Text="Image" />
+            <TextBlock Text="Image: " />
+            <Image />
         </ListBox>
 
         <TextBlock Grid.Column="3" Grid.Row="1" FontSize="20" Text="Update/Delete"/>
@@ -52,7 +53,8 @@
             <TextBox x:Name="gradeText" Width="200" />
             <TextBlock Text="Image" />
             <TextBox x:Name="imageText" Width="200" />
-            <Button x:Name="addImageButton" Content="Find Image" Width="80" Click="addImageButton_Click"/>
+            <Button x:Name="addImageButton" Content="Find Image" Width="80" 
+                    Margin="120,0,0,0" Click="addImageButton_Click"/>
         </ListBox>
         <Button x:Name="deleteButton" Content="Delete" Grid.Column="3" 
                 Grid.Row="3" Margin="20,10,150,0" Click="deleteButton_Click"/>
