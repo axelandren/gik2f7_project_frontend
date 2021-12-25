@@ -27,5 +27,10 @@ namespace ProjektWPF
             ServiceLayer sl = new ServiceLayer(DataUrl);
             Response data = sl.GetData();
         }
+
+        private void updateButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
