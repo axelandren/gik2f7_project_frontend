@@ -20,9 +20,12 @@ namespace ProjektWPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly string DataUrl = "http://localhost:5001/Game";
         public MainWindow()
         {
             InitializeComponent();
+            ServiceLayer sl = new ServiceLayer(DataUrl);
+            Response data = sl.GetData();
         }
     }
 }
