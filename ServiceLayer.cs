@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
+using Newtonsoft.Json;
 
 namespace ProjektWPF
 {
@@ -14,15 +16,24 @@ namespace ProjektWPF
         {
             this.FetchUrl = FetchUrl;
         }
-        public Response GetData()
+
+        public List<Game> GetAllGames()
         {
-            Response data = null;
-            using (WebClient wc = new WebClient())
+            List<Game> games = new();
+            try
             {
-                var json = wc.DownloadString(FetchUrl);
-                data = JsonSerializer.Deserialize<Response>(json);
+                using (WebClient wc = new())
+                {
+                    string json = wc.DownloadString(FetchUrl);
+                    games = JsonConvert.DeserializeObject<List<Game>>(json);
+                    return games;
+                }
             }
-            return data;
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return games;
+            }
         }
     }
 }

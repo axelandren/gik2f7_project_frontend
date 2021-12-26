@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,27 +23,58 @@ namespace ProjektWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly string DataUrl = "http://localhost:5001/Game";
+        private string GameUrl = "http://localhost:5000/Game/";
+        private ServiceLayer Sl;
         public MainWindow()
         {
             InitializeComponent();
-            ServiceLayer sl = new ServiceLayer(DataUrl);
-            Response data = sl.GetData();
         }
 
-        private void updateButton_Click(object sender, RoutedEventArgs e)
+        private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
-
+            Sl = new ServiceLayer(GameUrl);
+            List<Game> games = Sl.GetAllGames();
+            lvDataBinding.ItemsSource = games;
         }
 
-        private void deleteButton_Click(object sender, RoutedEventArgs e)
+        private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-
+            Game g = new()
+            {
+                name = nameText.Text,
+                description = descriptionText.Text,
+                grade = int.Parse(gradeNumber.Text),
+                image = imageText.Text
+            };
+            string postGame = JsonSerializer.Serialize(g);
+            using (HttpClient client = new())
+            {
+                //client.DefaultRequestHeaders.Accept.Clear();
+                //client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                var sendGame = new StringContent(postGame.ToString(), Encoding.UTF8, "application/json");
+                _ = client.PostAsync(GameUrl, sendGame);
+            }
         }
 
-        private void addImageButton_Click(object sender, RoutedEventArgs e)
+        private void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
+            throw new NotImplementedException();
+        }
 
+        private void AddImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        // Makes sure that textbox is number
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }
