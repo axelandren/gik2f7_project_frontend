@@ -24,6 +24,7 @@ namespace ProjektWPF
     public partial class MainWindow : Window
     {
         private string GameUrl = "http://localhost:5000/Game/";
+        private List<Game> games;
         private ServiceLayer Sl;
         public MainWindow()
         {
@@ -33,12 +34,24 @@ namespace ProjektWPF
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
             Sl = new ServiceLayer(GameUrl);
-            List<Game> games = Sl.GetAllGames();
-            lvDataBinding.ItemsSource = games;
+            games = Sl.GetAllGames();
+            AllGamesBinding.ItemsSource = games;
+        }
+
+        private void TextBlockMouseLeftDown(object sender, MouseButtonEventArgs e)
+        {
+            TextBlock gameClicked = sender as TextBlock;
+            string gameName = gameClicked.Text;
+            Game game = games.Where(i => i.name == gameName).FirstOrDefault();
+
+            Sl = new ServiceLayer(GameUrl + game.id);
+            IEnumerable<Game> list = Sl.GetGame();
+            InformationBinding.ItemsSource = list;
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
+            Sl = new ServiceLayer(GameUrl);
             Game g = new()
             {
                 name = nameText.Text,
@@ -52,7 +65,7 @@ namespace ProjektWPF
                 //client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
                 var sendGame = new StringContent(postGame.ToString(), Encoding.UTF8, "application/json");
-                _ = client.PostAsync(GameUrl, sendGame);
+                client.PostAsync(GameUrl, sendGame);
             }
         }
 

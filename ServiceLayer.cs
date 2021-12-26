@@ -5,7 +5,6 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
-using Newtonsoft.Json;
 
 namespace ProjektWPF
 {
@@ -25,7 +24,7 @@ namespace ProjektWPF
                 using (WebClient wc = new())
                 {
                     string json = wc.DownloadString(FetchUrl);
-                    games = JsonConvert.DeserializeObject<List<Game>>(json);
+                    games = JsonSerializer.Deserialize<List<Game>>(json);
                     return games;
                 }
             }
@@ -33,6 +32,28 @@ namespace ProjektWPF
             {
                 MessageBox.Show(ex.Message);
                 return games;
+            }
+        }
+
+        public IEnumerable<Game> GetGame()
+        {
+            Game game = new();
+            try
+            {
+                using (WebClient wc = new())
+                {
+                    string json = wc.DownloadString(FetchUrl);
+                    game = JsonSerializer.Deserialize<Game>(json);
+                    // Databinding requires IEnumerable object
+                    List<Game> list = new() { game };
+                    return list;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                List<Game> list = new() { game };
+                return list;
             }
         }
     }

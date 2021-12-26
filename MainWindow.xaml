@@ -27,11 +27,12 @@
 
         <TextBlock Grid.Column="1" Grid.Row="1" FontSize="20" Text="Games" 
                    Margin="0,0,0,10"/>
-        <ListView Grid.Column="1" Grid.Row="2" Name="lvDataBinding">
+        <ListView Grid.Column="1" Grid.Row="2" Name="AllGamesBinding">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <WrapPanel>
-                        <TextBlock Text="{Binding name}" Width="200"/>
+                        <TextBlock Text="{Binding name}" Width="200"
+                             MouseLeftButtonDown="TextBlockMouseLeftDown"/>
                     </WrapPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
@@ -39,18 +40,44 @@
             <Button x:Name="LoadButton" Content="Load List" Grid.Column="1" 
                 Grid.Row="3" Margin="150,10,20,0" Click="LoadButton_Click" />
         
-        <TextBlock Grid.Column="2" Grid.Row="1" FontSize="20" Text="Information"/>
-        <ListBox Grid.Column="2" Grid.Row="2">
-            <TextBlock Text="ID: " />
-            <TextBlock Text="Name: " />
-            <TextBlock Text="Description: " />
-            <TextBlock Text="Grade: " />
-            <TextBlock Text="Image: " />
-            <Image />
-        </ListBox>
+        <TextBlock Grid.Column="2" Grid.Row="1" FontSize="20" Text="Information" />
+        <ListView Grid.Column="2" Grid.Row="2" Name="InformationBinding">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="ID: " />
+                                <TextBlock Text="{Binding id}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Name: " />
+                                <TextBlock Text="{Binding name}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Description: " />
+                                <TextBlock Text="{Binding description}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Grade: " />
+                                <TextBlock Text="{Binding grade}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Image: " />
+                                <Image />
+                            </StackPanel>
+                        </StackPanel>
+                    </WrapPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button x:Name="DeleteButton" Content="Delete" Grid.Column="2" 
+                Grid.Row="3" Margin="20,10,150,0" Click="DeleteButton_Click"/>
+        <Button x:Name="EditButton" Content="Edit Game" Grid.Column="2" 
+                Grid.Row="3" Margin="150,10,20,0"/>
 
         <TextBlock Grid.Column="3" Grid.Row="1" FontSize="20" Text="Editor"/>
-        <ListBox Grid.Column="3" Grid.Row="2">
+        <ListView Grid.Column="3" Grid.Row="2">
             <TextBlock Text="Name" />
             <TextBox x:Name="nameText" Width="200" />
             <TextBlock Text="Description" />
@@ -62,9 +89,7 @@
             <TextBox x:Name="imageText" Width="200" />
             <Button x:Name="AddImageButton" Content="Find Image" Width="80" 
                     Margin="120,0,0,0" Click="AddImageButton_Click"/>
-        </ListBox>
-        <Button x:Name="DeleteButton" Content="Delete" Grid.Column="3" 
-                Grid.Row="3" Margin="20,10,150,0" Click="DeleteButton_Click"/>
+        </ListView>
         <Button x:Name="UpdateButton" Content="Update" Grid.Column="3" 
                 Grid.Row="3" Margin="150,10,20,0" Click="UpdateButton_Click"/>
         <Button x:Name="AddButton" Content="Add New" Grid.Column="3" 
