@@ -24,6 +24,7 @@ namespace ProjektWPF
     public partial class MainWindow : Window
     {
         private string GameUrl = "http://localhost:5000/Game/";
+        private readonly IGameRepository gr;
         private List<Game> games;
         private ServiceLayer Sl;
         public MainWindow()
@@ -59,14 +60,7 @@ namespace ProjektWPF
                 grade = int.Parse(gradeNumber.Text),
                 image = imageText.Text
             };
-            string postGame = JsonSerializer.Serialize(g);
-            using (HttpClient client = new())
-            {
-                //client.DefaultRequestHeaders.Accept.Clear();
-                //client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-                var sendGame = new StringContent(postGame.ToString(), Encoding.UTF8, "application/json");
-                client.PostAsync(GameUrl, sendGame);
-            }
+            Sl.AddGame(g);
         }
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
