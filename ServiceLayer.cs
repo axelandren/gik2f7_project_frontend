@@ -13,10 +13,10 @@ namespace ProjektWPF
 {
     public class ServiceLayer
     {
-        private string FetchUrl;
-        public ServiceLayer(string FetchUrl)
+        private string Url;
+        public ServiceLayer(string Url)
         {
-            this.FetchUrl = FetchUrl;
+            this.Url = Url;
         }
 
         public List<Game> GetAllGames()
@@ -26,7 +26,7 @@ namespace ProjektWPF
             {
                 using (WebClient client = new())
                 {
-                    var json = client.DownloadString(FetchUrl);
+                    string json = client.DownloadString(Url);
                     games = JsonSerializer.Deserialize<List<Game>>(json);
                     return games;
                 }
@@ -45,7 +45,7 @@ namespace ProjektWPF
             {
                 using (WebClient client = new())
                 {
-                    string json = client.DownloadString(FetchUrl);
+                    string json = client.DownloadString(Url);
                     game = JsonSerializer.Deserialize<Game>(json);
                     // Databinding requires IEnumerable object(list)
                     List<Game> list = new() { game };
@@ -66,7 +66,7 @@ namespace ProjektWPF
             {
                 using (HttpClient client = new())
                 {
-                    await client.PostAsJsonAsync(FetchUrl, game);
+                    await client.PostAsJsonAsync(Url, game);
                 }
             }
             catch (Exception ex)
@@ -75,14 +75,34 @@ namespace ProjektWPF
             }
         }
 
-        public Game UpdateGame()
+        public async void UpdateGame(Game game)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (HttpClient client = new())
+                {
+                    await client.PutAsJsonAsync(Url, game);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
-        public Game DeleteGame()
+        public async void DeleteGame()
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (HttpClient client = new())
+                {
+                    await client.DeleteAsync(Url);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

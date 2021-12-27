@@ -25,6 +25,7 @@ namespace ProjektWPF
     {
         private string GameUrl = "http://localhost:5000/Game/";
         private readonly IGameRepository gr;
+        private int gameSelected;
         private List<Game> games;
         private ServiceLayer Sl;
         public MainWindow()
@@ -44,6 +45,7 @@ namespace ProjektWPF
             TextBlock gameClicked = sender as TextBlock;
             string gameName = gameClicked.Text;
             Game game = games.Where(i => i.name == gameName).FirstOrDefault();
+            gameSelected = game.id;
 
             Sl = new ServiceLayer(GameUrl + game.id);
             IEnumerable<Game> list = Sl.GetGame();
@@ -53,28 +55,48 @@ namespace ProjektWPF
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             Sl = new ServiceLayer(GameUrl);
-            Game g = new()
+            Game game = new()
             {
                 name = nameText.Text,
                 description = descriptionText.Text,
                 grade = int.Parse(gradeNumber.Text),
                 image = imageText.Text
             };
-            Sl.AddGame(g);
+            Sl.AddGame(game);
         }
 
-        private void UpdateButton_Click(object sender, RoutedEventArgs e)
+        private void UpdateButton_Click(object sender, RoutedEventArgs e) // Updates adds a new object currently
         {
-            throw new NotImplementedException();
+            Sl = new ServiceLayer(GameUrl + gameSelected);
+
+            Game game = games.Where(i => i.id == gameSelected).FirstOrDefault();
+
+            game.id = game.id;
+            game.name = nameText.Text;
+            game.description = descriptionText.Text;
+            game.grade = int.Parse(gradeNumber.Text);
+            game.image = imageText.Text;
+            Sl.UpdateGame(game);
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            Game game = games.Where(i => i.id == gameSelected).FirstOrDefault();
+            nameText.Text = game.name;
+            descriptionText.Text = game.description;
+            gradeNumber.Text = game.grade.ToString();
+            imageText.Text = game.image;
         }
 
         private void AddImageButton_Click(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
         }
+
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            Sl = new ServiceLayer(GameUrl + gameSelected);
+            Sl.DeleteGame();
         }
 
         // Makes sure that textbox is number
