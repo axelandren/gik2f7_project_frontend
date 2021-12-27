@@ -19,44 +19,35 @@ namespace ProjektWPF
             this.Url = Url;
         }
 
-        public List<Game> GetAllGames()
+        public async Task<List<Game>> GetAllGames()
         {
-            List<Game> games = new();
             try
             {
-                using (WebClient client = new())
+                using (HttpClient client = new())
                 {
-                    string json = client.DownloadString(Url);
-                    games = JsonSerializer.Deserialize<List<Game>>(json);
-                    return games;
+                    return await client.GetFromJsonAsync<List<Game>>(Url);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                return games;
+                return null;
             }
         }
 
-        public IEnumerable<Game> GetGame()
+        public async Task<Game> GetGame()
         {
-            Game game = new();
             try
             {
-                using (WebClient client = new())
+                using (HttpClient client = new())
                 {
-                    string json = client.DownloadString(Url);
-                    game = JsonSerializer.Deserialize<Game>(json);
-                    // Databinding requires IEnumerable object(list)
-                    List<Game> list = new() { game };
-                    return list;
+                    return await client.GetFromJsonAsync<Game>(Url);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                List<Game> list = new() { game };
-                return list;
+                return null;
             }
         }
 

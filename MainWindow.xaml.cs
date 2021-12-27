@@ -32,12 +32,12 @@ namespace ProjektWPF
             InitializeComponent();
         }
 
-        private void LoadButton_Click(object sender, RoutedEventArgs e)
+        private async void LoadButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 Sl = new ServiceLayer(GameUrl);
-                games = Sl.GetAllGames();
+                games = await Sl.GetAllGames();
                 AllGamesBinding.ItemsSource = games;
             }
             catch (Exception ex)
@@ -46,7 +46,7 @@ namespace ProjektWPF
             }
         }
 
-        private void TextBlockMouseLeftDown(object sender, MouseButtonEventArgs e)
+        private async void TextBlockMouseLeftDown(object sender, MouseButtonEventArgs e)
         {
             try
             {
@@ -56,7 +56,8 @@ namespace ProjektWPF
                 gameSelected = game.id;
 
                 Sl = new ServiceLayer(GameUrl + game.id);
-                IEnumerable<Game> list = Sl.GetGame();
+                Game g = await Sl.GetGame();
+                List<Game> list = new() { g };
                 InformationBinding.ItemsSource = list;
             }
             catch (Exception ex)
@@ -132,6 +133,10 @@ namespace ProjektWPF
             {
                 Sl = new ServiceLayer(GameUrl + gameSelected);
                 Sl.DeleteGame();
+                nameText.Text = "";
+                descriptionText.Text = "";
+                gradeNumber.Text = "";
+                imageText.Text = "";
             }
             catch (Exception ex)
             {
