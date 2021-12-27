@@ -8,14 +8,6 @@ namespace ProjektWPF
 {
     public class Game
     {
-        // Get:
-        //[{
-        //    "id": 0,
-        //    "name": "string",
-        //    "description": "string",
-        //    "grade": 0,
-        //    "image": "string"
-        //}]
         public int id { get; set; }
         public string name { get; set; }
         public string description { get; set; }
