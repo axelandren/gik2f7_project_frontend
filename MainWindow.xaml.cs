@@ -59,6 +59,7 @@ namespace ProjektWPF
                 Game g = await Sl.GetGame();
                 List<Game> list = new() { g };
                 InformationBinding.ItemsSource = list;
+                SetEditorTextBoxToEmpty();
             }
             catch (Exception ex)
             {
@@ -66,7 +67,7 @@ namespace ProjektWPF
             }
         }
 
-        private void AddButton_Click(object sender, RoutedEventArgs e)
+        private async void AddButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -78,7 +79,8 @@ namespace ProjektWPF
                     grade = int.Parse(gradeNumber.Text),
                     image = imageText.Text
                 };
-                Sl.AddGame(game);
+                await Sl.AddGame(game);
+                SetEditorTextBoxToEmpty();
             }
             catch (Exception ex)
             {
@@ -86,7 +88,7 @@ namespace ProjektWPF
             }
         }
 
-        private void UpdateButton_Click(object sender, RoutedEventArgs e)
+        private async void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -99,11 +101,8 @@ namespace ProjektWPF
                 game.description = descriptionText.Text;
                 game.grade = int.Parse(gradeNumber.Text);
                 game.image = imageText.Text;
-                Sl.UpdateGame(game);
-                nameText.Text = "";
-                descriptionText.Text = "";
-                gradeNumber.Text = "";
-                imageText.Text = "";
+                await Sl.UpdateGame(game);
+                SetEditorTextBoxToEmpty();
             }
             catch (Exception ex)
             {
@@ -127,16 +126,12 @@ namespace ProjektWPF
             }
         }
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 Sl = new ServiceLayer(GameUrl + gameSelected);
-                Sl.DeleteGame();
-                nameText.Text = "";
-                descriptionText.Text = "";
-                gradeNumber.Text = "";
-                imageText.Text = "";
+                await Sl.DeleteGame();
             }
             catch (Exception ex)
             {
@@ -149,6 +144,14 @@ namespace ProjektWPF
         {
             Regex regex = new("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void SetEditorTextBoxToEmpty()
+        {
+            nameText.Text = "";
+            descriptionText.Text = "";
+            gradeNumber.Text = "";
+            imageText.Text = "";
         }
     }
 }

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace ProjektWPF
 {
@@ -21,78 +15,41 @@ namespace ProjektWPF
 
         public async Task<List<Game>> GetAllGames()
         {
-            try
+            using (HttpClient client = new())
             {
-                using (HttpClient client = new())
-                {
-                    return await client.GetFromJsonAsync<List<Game>>(Url);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return null;
+                return await client.GetFromJsonAsync<List<Game>>(Url);
             }
         }
 
         public async Task<Game> GetGame()
         {
-            try
+            using (HttpClient client = new())
             {
-                using (HttpClient client = new())
-                {
-                    return await client.GetFromJsonAsync<Game>(Url);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return null;
+                return await client.GetFromJsonAsync<Game>(Url);
             }
         }
 
-        public async void AddGame(Game game)
+        public async Task AddGame(Game game)
         {
-            try
+            using (HttpClient client = new())
             {
-                using (HttpClient client = new())
-                {
-                    await client.PostAsJsonAsync(Url, game);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
+                await client.PostAsJsonAsync(Url, game);
             }
         }
 
-        public async void UpdateGame(Game game)
+        public async Task UpdateGame(Game game)
         {
-            try
+            using (HttpClient client = new())
             {
-                using (HttpClient client = new())
-                {
-                    await client.PutAsJsonAsync(Url, game);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
+                await client.PutAsJsonAsync(Url, game);
             }
         }
 
-        public async void DeleteGame()
+        public async Task DeleteGame()
         {
-            try
+            using (HttpClient client = new())
             {
-                using (HttpClient client = new())
-                {
-                    await client.DeleteAsync(Url);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
+                await client.DeleteAsync(Url);
             }
         }
     }
