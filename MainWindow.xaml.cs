@@ -1,20 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ProjektWPF
 {
@@ -23,10 +13,10 @@ namespace ProjektWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private string GameUrl = "http://localhost:5000/Game/";
+        private readonly string GameUrl = "http://localhost:5000/Game/";
         private int gameSelected;
         private List<Game> games;
-        private ServiceLayer Sl;
+        private Processes process;
         public MainWindow()
         {
             InitializeComponent();
@@ -36,8 +26,8 @@ namespace ProjektWPF
         {
             try
             {
-                Sl = new ServiceLayer(GameUrl);
-                games = await Sl.GetAllGames();
+                process = new Processes(GameUrl);
+                games = await process.GetAllGames();
                 AllGamesBinding.ItemsSource = games;
             }
             catch (Exception ex)
@@ -52,11 +42,11 @@ namespace ProjektWPF
             {
                 TextBlock gameClicked = sender as TextBlock;
                 string gameName = gameClicked.Text;
-                Game game = games.Where(i => i.name == gameName).FirstOrDefault();
+                Game game = games.FirstOrDefault(i => i.name == gameName);
                 gameSelected = game.id;
 
-                Sl = new ServiceLayer(GameUrl + game.id);
-                Game g = await Sl.GetGame();
+                process = new Processes(GameUrl + game.id);
+                Game g = await process.GetGame();
                 List<Game> list = new() { g };
                 InformationBinding.ItemsSource = list;
                 SetEditorTextBoxToEmpty();
@@ -71,7 +61,7 @@ namespace ProjektWPF
         {
             try
             {
-                Sl = new ServiceLayer(GameUrl);
+                process = new Processes(GameUrl);
                 Game game = new()
                 {
                     name = nameText.Text,
@@ -79,7 +69,7 @@ namespace ProjektWPF
                     grade = int.Parse(gradeNumber.Text),
                     image = imageText.Text
                 };
-                await Sl.AddGame(game);
+                await process.AddGame(game);
                 SetEditorTextBoxToEmpty();
             }
             catch (Exception ex)
@@ -92,16 +82,16 @@ namespace ProjektWPF
         {
             try
             {
-                Sl = new ServiceLayer(GameUrl + gameSelected);
+                process = new Processes(GameUrl + gameSelected);
 
-                Game game = games.Where(i => i.id == gameSelected).FirstOrDefault();
+                Game game = games.FirstOrDefault(i => i.id == gameSelected);
 
                 game.id = game.id;
                 game.name = nameText.Text;
                 game.description = descriptionText.Text;
                 game.grade = int.Parse(gradeNumber.Text);
                 game.image = imageText.Text;
-                await Sl.UpdateGame(game);
+                await process.UpdateGame(game);
                 SetEditorTextBoxToEmpty();
             }
             catch (Exception ex)
@@ -130,8 +120,8 @@ namespace ProjektWPF
         {
             try
             {
-                Sl = new ServiceLayer(GameUrl + gameSelected);
-                await Sl.DeleteGame();
+                process = new Processes(GameUrl + gameSelected);
+                await process.DeleteGame();
             }
             catch (Exception ex)
             {

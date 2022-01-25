@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace ProjektWPF
 {
-    public class ServiceLayer
+    public class Processes
     {
-        private string Url;
-        public ServiceLayer(string Url)
+        private readonly string Url;
+        public Processes(string Url)
         {
             this.Url = Url;
         }
