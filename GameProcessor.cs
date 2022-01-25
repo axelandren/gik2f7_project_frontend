@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using ProjektWPF.Models;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace ProjektWPF
 {
-    public class Processes
+    public class GameProcessor
     {
         private readonly string Url;
-        public Processes(string Url)
+        public GameProcessor(string Url)
         {
             this.Url = Url;
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjektWPF.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -16,7 +17,7 @@ namespace ProjektWPF
         private readonly string GameUrl = "http://localhost:5000/Game/";
         private int gameSelected;
         private List<Game> games;
-        private Processes process;
+        private GameProcessor gp;
         public MainWindow()
         {
             InitializeComponent();
@@ -26,8 +27,8 @@ namespace ProjektWPF
         {
             try
             {
-                process = new Processes(GameUrl);
-                games = await process.GetAllGames();
+                gp = new GameProcessor(GameUrl);
+                games = await gp.GetAllGames();
                 AllGamesBinding.ItemsSource = games;
             }
             catch (Exception ex)
@@ -45,8 +46,8 @@ namespace ProjektWPF
                 Game game = games.FirstOrDefault(i => i.name == gameName);
                 gameSelected = game.id;
 
-                process = new Processes(GameUrl + game.id);
-                Game g = await process.GetGame();
+                gp = new GameProcessor(GameUrl + game.id);
+                Game g = await gp.GetGame();
                 List<Game> list = new() { g };
                 InformationBinding.ItemsSource = list;
                 SetEditorTextBoxToEmpty();
@@ -61,7 +62,7 @@ namespace ProjektWPF
         {
             try
             {
-                process = new Processes(GameUrl);
+                gp = new GameProcessor(GameUrl);
                 Game game = new()
                 {
                     name = nameText.Text,
@@ -69,7 +70,7 @@ namespace ProjektWPF
                     grade = int.Parse(gradeNumber.Text),
                     image = imageText.Text
                 };
-                await process.AddGame(game);
+                await gp.AddGame(game);
                 SetEditorTextBoxToEmpty();
             }
             catch (Exception ex)
@@ -82,7 +83,7 @@ namespace ProjektWPF
         {
             try
             {
-                process = new Processes(GameUrl + gameSelected);
+                gp = new GameProcessor(GameUrl + gameSelected);
 
                 Game game = games.FirstOrDefault(i => i.id == gameSelected);
 
@@ -91,7 +92,7 @@ namespace ProjektWPF
                 game.description = descriptionText.Text;
                 game.grade = int.Parse(gradeNumber.Text);
                 game.image = imageText.Text;
-                await process.UpdateGame(game);
+                await gp.UpdateGame(game);
                 SetEditorTextBoxToEmpty();
             }
             catch (Exception ex)
@@ -120,8 +121,8 @@ namespace ProjektWPF
         {
             try
             {
-                process = new Processes(GameUrl + gameSelected);
-                await process.DeleteGame();
+                gp = new GameProcessor(GameUrl + gameSelected);
+                await gp.DeleteGame();
             }
             catch (Exception ex)
             {
